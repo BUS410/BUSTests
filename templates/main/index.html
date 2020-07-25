@@ -1,0 +1,14 @@
+{% extends 'wrapper.html' %}
+
+{% block title %}BUS-Tests{% endblock %}
+
+{% block content %}
+    <h1>Все тесты</h1>
+    <hr>
+    {% if not tests %}
+        <h2>Тесты не найдены</h2>
+    {% endif %}
+    {% for test in tests %}
+        <h5>{{ test }}</h5>
+    {% endfor %}
+{% endblock %}

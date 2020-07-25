@@ -1,0 +1,9 @@
+{% extends 'wrapper.html' %}
+
+{% block title %}{{ user.username }} - Профиль{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <h1>{{ user.username }} welcome to your profile page</h1>
+    {% endif %}
+{% endblock %}
