@@ -1,0 +1,79 @@
+{% extends 'wrapper.html' %}
+
+{% block title %}Создание нового теста{% endblock %}
+
+{% block content %}
+    <script>
+        function get_numbers(name) {
+            var q_num = "", a_num = "";
+            var after_separator = false;
+            for (i = 0; i < name.length; i++){
+                if (name[i] == "-"){
+                    after_separator = true;
+                    continue;
+                }
+                if (!after_separator)
+                    q_num += name[i];
+                else
+                    a_num += name[i]
+            }
+            return q_num + '-' + (a_num - -1)
+        }
+        function add_question(container) {
+            var count = container.childElementCount;
+            var num = count - 2;
+            const html_code = `<hr><h3><textarea required rows="1" name="${num}-0" placeholder="Вопрос"></textarea></h3><ol><li><textarea required name="${num}-1" rows="1" placeholder="Ответ"></textarea> <input name="!${num}-1" type="checkbox"></li><button type="button" class="btn btn-success" onclick="add_answer(this.parentElement)">Добавить ответ</button> <button type="button" class="btn btn-danger" onclick="remove_answer(this.parentElement)">Удалить ответ</button></ol>`
+
+            var br = container.children[count-3];
+            var li = document.createElement('li');
+            li.className = "list-item";
+            li.innerHTML = html_code;
+            container.insertBefore(li, br);
+
+        }
+        function remove_question(container) {
+            if (container.childElementCount > 4)
+                container.removeChild(container.children[container.childElementCount-4])
+
+        }
+        function add_answer(list_elements) {
+            const count = list_elements.childElementCount;
+            var last_answer = list_elements.children[count-3];
+            var li = document.createElement('li');
+            li.innerHTML = last_answer.innerHTML;
+            var new_name = get_numbers(li.firstChild.getAttribute('name'));
+            li.firstChild.setAttribute('name', new_name);
+            li.lastChild.setAttribute('name', '!' + new_name);
+            list_elements.insertBefore(li, list_elements.children[count-2]);
+        }
+        function remove_answer(parent) {
+            if (parent.childElementCount > 3)
+                parent.removeChild(parent.children[parent.childElementCount - 3])
+        }
+    </script><br>
+    <div class="alert alert-warning" role="alert">
+        Примечание: <br>
+        Верных ответов может быть несколько или один, а может вооще и не быть.
+    </div>
+    <hr>
+    <form action="{% url 'new_test' %}" method="POST">
+
+    {% csrf_token %}
+    <h1><textarea required name="title" rows="1" placeholder="Заголовок теста"></textarea></h1>
+    <ol class="container-fluid">
+        <li class="list-item">
+            <hr>
+            <h3><textarea required rows="1" name="1-0" placeholder="Вопрос"></textarea></h3>
+            <ol>
+                <li><textarea required name="1-1" rows="1" placeholder="Ответ"></textarea> <input name="!1-1" class="checkbox-inline" type="checkbox"></li>
+                <button type="button" class="btn btn-success" onclick="add_answer(this.parentElement)">Добавить ответ</button>
+                <button type="button" class="btn btn-danger" onclick="remove_answer(this.parentElement)">Удалить ответ</button>
+            </ol>
+        </li>
+        <hr>
+        <button type="button" class="btn btn-success" onclick="add_question(this.parentElement)">Добавить вопрос</button>
+        <button type="button" class="btn btn-danger" onclick="remove_question(this.parentElement)">Удалить вопрос</button>
+    </ol>
+        <input type="submit" class="btn btn-primary">
+    </form>
+{% endblock %}

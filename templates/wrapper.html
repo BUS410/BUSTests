@@ -27,8 +27,9 @@
 		  	<a href="" class="nav-link" href="#">Создать новый тест</a>
 		  </li>
 		</ul>
-		<form class="form-inline my-2 my-lg-0">
-		  <input class="form-control mr-sm-2" type="search" placeholder="Введите название теста" aria-label="Search">
+		<form class="form-inline my-2 my-lg-0" action="{% url 'index' %}" method="POST">
+          {% csrf_token %}
+		  <input class="form-control mr-sm-2" type="search" name="query" placeholder="Введите название теста" aria-label="Search">
 		  <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Поиск</button>
 		</form>
 	  </div>
@@ -38,6 +39,17 @@
 		{% block content %}
 		{% endblock %}
 	</div>
+    <div class="container-fluid col-md-9 col-padding" id="main" style="padding-bottom: 50px;padding-top: 50px;">
+
+        <footer class="footer">
+            <hr>
+            <div class="container-fluid row">
+                <a target="_blank" style="text-align: center;" href="https://vk.com/bus_410" class="col-6">Вконтакте разработчика</a>
+                <a target="_blank" style="text-align: center;" href="https://github.com/BUS410/Tests" class="col-6">Github проекта</a>
+            </div>
+        </footer>
+
+    </div>
 
 </body>
 </html>
