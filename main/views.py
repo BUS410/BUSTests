@@ -6,11 +6,11 @@ from . import models
 # Create your views here.
 
 
-def index(request, query=''):
+def index(request):
     if request.method == 'POST':
         tests = models.Test.objects.filter(title__icontains=request.POST['query'])
     else:
-        tests = models.Test.objects.filter(title__icontains=query)
+        tests = models.Test.objects.all()
 
     return render(request, 'main/index.html', {'tests': tests})
 
