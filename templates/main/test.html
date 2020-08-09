@@ -1,0 +1,36 @@
+{% extends 'wrapper.html' %}
+
+{% block title %}{% endblock %}
+
+{% block content %}
+    <h1 style="padding-top: 5px;">{{ test }}</h1>
+    {% if not is_auth %}
+        <div class="alert alert-warning" role="alert">
+            Примечание: <br>
+            Вы не вошли в аккаунт.
+            Ваши результаты не будут сохранены. Чтобы войти перейдите по
+            <a href="{% url 'login' %}">этой</a> ссылке.
+        </div>
+    {% endif %}
+    <hr>
+    <form action="{% url 'test' test.id %}" method="post">
+    {% csrf_token %}
+    <ol>
+
+    {% for q, ans in questions %}
+        <li>
+            <h3>{{ q }}</h3>
+            <ol>
+            {% for a in ans %}
+                <li>{{ a }} <label>
+                    <input type="checkbox" name="{{ q.id }}-{{ a.id }}" value="1">
+                </label></li>
+            {% endfor %}
+            </ol>
+        </li>
+    {% endfor %}
+
+    </ol>
+    <button type="submit" class="btn btn-primary">Получить результат</button>
+    </form>
+{% endblock %}

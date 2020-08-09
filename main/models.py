@@ -16,7 +16,7 @@ class Question(models.Model):
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.text[:30]
+        return self.text
 
 
 class Answer(models.Model):
@@ -25,11 +25,11 @@ class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.text[:30]
+        return self.text
 
 
 class Result(models.Model):
-    count_answers = models.IntegerField()
-    count_correct_answers = models.IntegerField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    count_questions = models.IntegerField()
+    count_correct_questions = models.IntegerField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True)
     test = models.ForeignKey(Test, on_delete=models.CASCADE)

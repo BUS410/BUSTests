@@ -9,7 +9,7 @@
         <h2>Тесты не найдены</h2>
     {% else %}
     {% for test in tests %}
-        <h5>{{ test }}</h5>
+        <h5><a href="{% url 'test' test.id %}">{{ test }}</a></h5>
     {% endfor %}
     {% endif %}
 {% endblock %}

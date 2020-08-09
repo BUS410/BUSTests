@@ -4,6 +4,8 @@
 
 {% block content %}
     {% if user.is_authenticated %}
-        <h1>{{ user.username }} welcome to your profile page</h1>
+        <h1>{{ user.username }}</h1>
+        <hr>
+
     {% endif %}
 {% endblock %}
