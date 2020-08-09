@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+from django.views import generic
+from django.contrib.auth.forms import UserCreationForm
 from . import models
 
 # Create your views here.
@@ -38,3 +40,9 @@ def new_test(request):
         return HttpResponseRedirect(reverse('new_test'))
 
     return render(request, 'main/new_test.html')
+
+
+class SignUpView(generic.CreateView):
+    form_class = UserCreationForm
+    success_url = reverse_lazy('login')
+    template_name = 'registration/register.html'

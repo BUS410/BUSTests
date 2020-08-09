@@ -29,6 +29,7 @@ class Answer(models.Model):
 
 
 class Result(models.Model):
-    result = models.IntegerField()
+    count_answers = models.IntegerField()
+    count_correct_answers = models.IntegerField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
