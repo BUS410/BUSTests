@@ -18,7 +18,13 @@
 	  <div class="collapse navbar-collapse" id="navbarSupportedContent">
 		<ul class="navbar-nav mr-auto">
 		  <li class="nav-item active">
-			<a class="nav-link" href="{% url 'profile' %}">Профиль</a>
+			<a class="nav-link" href="{% url 'profile' %}">
+                {% if request.user.is_authenticated %}
+                    Профиль
+                {% else %}
+                    Войти
+                {% endif %}
+            </a>
 		  </li>
 		  <li class="nav-item active">
 		  	<a class="nav-link" href="{% url 'test_list' %}">Все тесты</a>

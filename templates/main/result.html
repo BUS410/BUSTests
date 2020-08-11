@@ -3,7 +3,8 @@
 {% block title %}Результаты теста{% endblock %}
 
 {% block content %}
-    <h1>Результат теста {{ res.test }} пользователя {{ res.user }}</h1>
+    <h1>Результат теста <a href="{% url 'test' res.test_id %}">{{ res.test }}</a>
+        пользователя {{ res.user }}</h1>
     <hr>
     <h5>Правильных ответов : {{ res.count_correct_questions }}</h5>
     <h5>Количество вопросов: {{ res.count_questions }}</h5>

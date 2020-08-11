@@ -8,8 +8,22 @@
     {% if not tests %}
         <h2>Тесты не найдены</h2>
     {% else %}
+    <ul class="list-group">
     {% for test in tests %}
-        <h5><a href="{% url 'test' test.id %}">{{ test }}</a></h5>
+        <li class="btn-group list-group-item">
+            <h5><a href="{% url 'test' test.id %}">{{ test }}</a></h5>
+        </li>
     {% endfor %}
+    </ul>
+    {% endif %}
+    {% if pages %}
+        <div style="padding-top: unset" class="text-center">
+            <span>Страницы: </span>
+           {% for page in pages %}
+
+               <a href="{% url 'test_list_page' page %}">{{ page }}</a>
+
+           {% endfor %}
+        </div>
     {% endif %}
 {% endblock %}

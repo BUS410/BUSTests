@@ -1,3 +1,5 @@
+from math import ceil
+
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, Http404
 from django.urls import reverse, reverse_lazy
@@ -5,23 +7,35 @@ from django.views import generic
 from django.contrib.auth.forms import UserCreationForm
 from . import models
 
+
 # Create your views here.
 
 
-def index(request):
+ELEMENT_IN_PAGE = 5
+
+
+def index(request, page=1):
     if request.method == 'POST':
         tests = models.Test.objects.filter(title__icontains=request.POST['query'])
     else:
         tests = models.Test.objects.all()
 
-    return render(request, 'main/index.html', {'tests': tests})
+    count_pages = ceil(len(tests) / ELEMENT_IN_PAGE)
+    tests = tests[(page - 1) * ELEMENT_IN_PAGE:page * ELEMENT_IN_PAGE]
+
+    return render(request, 'main/index.html',
+                  {'tests': tests, 'pages': range(1, count_pages + 1) if count_pages > ELEMENT_IN_PAGE else False})
 
 
-def profile(request):
+def profile(request, page=1):
     if request.user.is_authenticated:
+        results = models.Result.objects.filter(user=request.user).order_by('-id')
+        count_pages = ceil(len(results) / ELEMENT_IN_PAGE)
+        results = results[(page - 1) * ELEMENT_IN_PAGE:page * ELEMENT_IN_PAGE]
         return render(request, 'registration/profile.html',
                       {'user': request.user,
-                       'results': models.Result.objects.filter(user=request.user)})
+                       'results': results,
+                       'pages': range(1, count_pages + 1) if count_pages > ELEMENT_IN_PAGE else False})
     return HttpResponseRedirect(reverse('login'))
 
 
@@ -41,7 +55,7 @@ def test_passing(request, pk: int):
                 res += 1
 
         test_result = models.Result(test=models.Test.objects.get(id=pk), user=request.user,
-                      count_questions=len(questions), count_correct_questions=res)
+                                    count_questions=len(questions), count_correct_questions=res)
         test_result.save()
 
         return HttpResponseRedirect(reverse('result', args=[test_result.id]))
