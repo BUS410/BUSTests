@@ -108,11 +108,11 @@ def new_test(request):
 
 
 def results_by_test(request, pk, page=1):
-	try:
-	    test = models.Test.objects.get(id=pk)
-	except Exception as e:
-		print(e)
-		raise Http404
+    try:
+        test = models.Test.objects.get(id=pk)
+    except Exception as e:
+        print(e)
+        raise Http404
     results = models.Result.objects.filter(test=test).order_by('-id')
 
     count_pages = ceil(len(results) / ELEMENT_IN_PAGE)
