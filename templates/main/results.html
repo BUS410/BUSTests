@@ -1,0 +1,30 @@
+{% extends 'main/wrapper.html' %}
+
+{% block title %}Результаты по тесту {{ test }}{% endblock %}
+
+{% block content %}
+    <h2>Результаты по тесту {{ test }}</h2>
+    <hr>
+    <ul class="list_container">
+        {% for res in results %}
+            <li class="list-group-item">
+                {% if res.user %}
+                    <h3>Пользователь: {{ res.user.get_full_name }}</h3>
+                {% endif %}
+                <h4>Результат: <a href="{% url 'result' res.id %}">
+                    {{ res.count_correct_questions }}/{{ res.count_questions }}
+                </a></h4>
+                <h4>Попытка: {{ res.attempt }}</h4>
+            </li>
+        {% endfor %}
+    </ul>
+    {% if pages %}
+        <div class="text-center">
+           {% for page in pages %}
+
+               <a class="btn btn-link btn-outline-primary" style="margin-top: 10px;" href="{% url 'results_page' test.id page %}">{{ page }}</a>
+
+           {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}

@@ -1,11 +1,17 @@
-{% extends 'wrapper.html' %}
+{% extends 'main/wrapper.html' %}
 
 {% block title %}Результаты теста{% endblock %}
 
 {% block content %}
     <h1>Результат теста <a href="{% url 'test' res.test_id %}">{{ res.test }}</a>
-        пользователя {{ res.user }}</h1>
+        {% if res.user %}
+            пользователя {{ res.user }}
+        {% endif %}
+    </h1>
     <hr>
-    <h5>Правильных ответов : {{ res.count_correct_questions }}</h5>
-    <h5>Количество вопросов: {{ res.count_questions }}</h5>
+    <h4>Попытка номер: {{ res.attempt }}</h4>
+    <h4>Правильных ответов: {{ res.count_correct_questions }}</h4>
+    <h4>Количество вопросов: {{ res.count_questions }}</h4>
+    <h4>Процент правильных ответов: {{ percent }}%</h4>
+
 {% endblock %}

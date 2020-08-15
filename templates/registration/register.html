@@ -1,17 +1,30 @@
-{% extends 'wrapper.html' %}
+{% extends 'main/wrapper.html' %}
 {% block content %}
 <h2>Регистрация</h2>
 <form method="post">
 {% csrf_token %}
 {% for field in form %}
 <p>
-  {{ field.label_tag }}<br>
+  {% if field.name == 'username' %}
+      Логин:
+  {% else %}
+      {{ field.label_tag }}
+  {% endif %}
+  <br>
   {{ field }}
-  {% if field.help_text %}
-  <span>{{ field.help_text }}</span>
+  {% if field.name == 'password1' %}
+      <span>
+          <ul class="alert alert-warning">
+              <li>Ваш пароль не может быть слишком похож на вашу другую личную информацию.</li>
+              <li>Ваш пароль должен содержать как минимум 8 символов.</li>
+              <li>Ваш пароль не может быть полностью числовым.</li>
+          </ul>
+      </span>
+  {% else %}
+    <span class="alert alert-warning">{{ field.help_text }}</span>
   {% endif %}
   {% for error in field.errors %}
-  <p>{{ error }}</p>
+  <p class="alert alert-danger">{{ error }}</p>
   {% endfor %}
 </p>
 {% endfor %}

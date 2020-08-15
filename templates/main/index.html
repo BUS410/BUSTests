@@ -1,4 +1,4 @@
-{% extends 'wrapper.html' %}
+{% extends 'main/wrapper.html' %}
 
 {% block title %}BUS-Tests{% endblock %}
 
@@ -17,11 +17,12 @@
     </ul>
     {% endif %}
     {% if pages %}
-        <div style="padding-top: unset" class="text-center">
-            <span>Страницы: </span>
+        <div class="text-center">
            {% for page in pages %}
 
-               <a href="{% url 'test_list_page' page %}">{{ page }}</a>
+               <a class="btn btn-link btn-outline-primary" style="margin-top: 10px;" href="{% url 'test_list_page' page %}">
+                   {{ page }}
+               </a>
 
            {% endfor %}
         </div>

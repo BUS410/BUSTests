@@ -1,10 +1,12 @@
-{% extends 'wrapper.html' %}
+{% extends 'main/wrapper.html' %}
 
-{% block title %}{% endblock %}
+{% block title %}{{ test }}{% endblock %}
 
 {% block content %}
     <h1 style="padding-top: 5px;">{{ test }}</h1>
-    {% if not is_auth %}
+    <div class="alert alert-success">Этот тест прошли {{ count_passed }} раз(-a). Нажмите
+    <a href="{% url 'results' test.id %}">здесь</a> чтобы посмотреть все результаты по этому тесту.</div>
+    {% if not request.user.is_authenticated %}
         <div class="alert alert-warning" role="alert">
             Примечание: <br>
             Вы не вошли в аккаунт.
@@ -23,7 +25,7 @@
             <ol>
             {% for a in ans %}
                 <li>{{ a }} <label>
-                    <input type="checkbox" name="{{ q.id }}-{{ a.id }}" value="1">
+                    <input type="checkbox" name="{{ q.id }}-{{ a.id }}">
                 </label></li>
             {% endfor %}
             </ol>

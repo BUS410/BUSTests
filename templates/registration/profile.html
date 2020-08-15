@@ -1,27 +1,31 @@
-{% extends 'wrapper.html' %}
+{% extends 'main/wrapper.html' %}
 
 {% block title %}{{ user.username }} - Профиль{% endblock %}
 
 {% block content %}
-    <h1>{{ user.username }}</h1>
+    <h1>{{ user.get_full_name }}, добро пожаловать в свой профиль.</h1>
+    <a href="{% url 'logout' %}">
+        <button class="btn btn-warning">Выйти</button>
+    </a><br>
+    <label>Ниже находятся все сохраненные результаты тестов</label>
+
     <hr>
     {% if results %}
         <ul class="list_container">
             {% for res in results %}
                 <li class="list-group-item">
                     <h3>Тест: <a href="{% url 'test' res.test_id %}">{{ res.test }}</a></h3>
-                    <p>Результат: <a href="{% url 'result' res.id %}">
+                    <h4>Результат: <a href="{% url 'result' res.id %}">
                         {{ res.count_correct_questions }}/{{ res.count_questions }}
-                    </a></p>
+                    </a></h4>
                 </li>
             {% endfor %}
         </ul>
         {% if pages %}
-            <div style="padding-top: unset" class="text-center">
-                <span>Страницы: </span>
+            <div class="text-center">
                {% for page in pages %}
 
-                   <a href="{% url 'profile_page' page %}">{{ page }}</a>
+                   <a class="btn btn-link btn-outline-primary" style="margin-top: 10px;" href="{% url 'profile_page' page %}">{{ page }}</a>
 
                {% endfor %}
             </div>

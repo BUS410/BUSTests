@@ -1,4 +1,4 @@
-{% extends 'wrapper.html' %}
+{% extends 'main/wrapper.html' %}
 
 {% block title %}Создание нового теста{% endblock %}
 
@@ -56,7 +56,7 @@
         Верных ответов может быть несколько или один, а может вооще и не быть.
     </div>
     <hr>
-    <form action="{% url 'test_list' %}" method="POST">
+    <form action="{% url 'new_test' %}" method="POST">
 
     {% csrf_token %}
     <h1><textarea required name="title" rows="1" placeholder="Заголовок теста"></textarea></h1>
@@ -74,6 +74,6 @@
         <button type="button" class="btn btn-success" onclick="add_question(this.parentElement)">Добавить вопрос</button>
         <button type="button" class="btn btn-danger" onclick="remove_question(this.parentElement)">Удалить вопрос</button>
     </ol>
-        <input type="submit" class="btn btn-primary">
+        <input type="submit" class="btn btn-primary" value="Сохранить тест">
     </form>
 {% endblock %}

@@ -4,27 +4,28 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, Http404
 from django.urls import reverse, reverse_lazy
 from django.views import generic
-from django.contrib.auth.forms import UserCreationForm
 from . import models
+from .forms import SignUpForm
 
 
 # Create your views here.
 
 
-ELEMENT_IN_PAGE = 5
+ELEMENT_IN_PAGE = 20
 
 
 def index(request, page=1):
     if request.method == 'POST':
-        tests = models.Test.objects.filter(title__icontains=request.POST['query'])
+        tests = models.Test.objects.filter(title__icontains=request.POST['query']).order_by('-id')
+        return render(request, 'main/index.html', {'tests': tests})
     else:
-        tests = models.Test.objects.all()
+        tests = models.Test.objects.order_by('-id')
 
-    count_pages = ceil(len(tests) / ELEMENT_IN_PAGE)
-    tests = tests[(page - 1) * ELEMENT_IN_PAGE:page * ELEMENT_IN_PAGE]
+        count_pages = ceil(len(tests) / ELEMENT_IN_PAGE)
+        tests = tests[(page - 1) * ELEMENT_IN_PAGE:page * ELEMENT_IN_PAGE]
 
-    return render(request, 'main/index.html',
-                  {'tests': tests, 'pages': range(1, count_pages + 1) if count_pages > ELEMENT_IN_PAGE else False})
+        return render(request, 'main/index.html',
+                      {'tests': tests, 'pages': range(1, count_pages + 1) if count_pages > 1 else False})
 
 
 def profile(request, page=1):
@@ -35,12 +36,19 @@ def profile(request, page=1):
         return render(request, 'registration/profile.html',
                       {'user': request.user,
                        'results': results,
-                       'pages': range(1, count_pages + 1) if count_pages > ELEMENT_IN_PAGE else False})
+                       'pages': range(1, count_pages + 1) if count_pages > 1 else False})
     return HttpResponseRedirect(reverse('login'))
 
 
 def result(request, pk: int):
-    return render(request, 'main/result.html', {'res': models.Result.objects.get(id=pk)})
+    try:
+        res = models.Result.objects.get(id=pk)
+        percent = round(res.count_correct_questions / res.count_questions * 100, 2)
+        print(res.count_correct_questions, res.count_questions)
+        return render(request, 'main/result.html', {'res': res, 'percent': percent})
+    except Exception as e:
+        print(e)
+        raise Http404
 
 
 def test_passing(request, pk: int):
@@ -54,8 +62,12 @@ def test_passing(request, pk: int):
             if id_answers == current_ids:
                 res += 1
 
-        test_result = models.Result(test=models.Test.objects.get(id=pk), user=request.user,
-                                    count_questions=len(questions), count_correct_questions=res)
+        test_result = models.Result(test=models.Test.objects.get(id=pk),
+                                    count_questions=len(questions), count_correct_questions=res,
+                                    attempt=len(models.Result.objects.filter(user=request.user, test_id=pk))+1
+                                    if request.user.is_authenticated else 1)
+        if request.user.is_authenticated:
+            test_result.user = request.user
         test_result.save()
 
         return HttpResponseRedirect(reverse('result', args=[test_result.id]))
@@ -65,9 +77,9 @@ def test_passing(request, pk: int):
         questions = [(q, models.Answer.objects.filter(question=q))
                      for q in models.Question.objects.filter(test=test)]
         return render(request, 'main/test.html',
-                      {'is_auth': request.user.is_authenticated,
-                       'questions': questions,
-                       'test': test})
+                      {'questions': questions,
+                       'test': test,
+                       'count_passed': len(models.Result.objects.filter(test=test))})
     except Exception as e:
         print(e)
         raise Http404
@@ -88,14 +100,28 @@ def new_test(request):
                     answer = models.Answer(text=request.POST[f'{i}-{j}'], question=question,
                                            is_correct=f'!{i}-{j}' in request.POST)
                     answer.save()
-            return HttpResponseRedirect(reverse('new_test'))
+            return HttpResponseRedirect(reverse('test_list'))
         except Exception:
             raise Http404
 
     return render(request, 'main/new_test.html')
 
 
+def results_by_test(request, pk, page=1):
+    test = models.Test.objects.get(id=pk)
+    results = models.Result.objects.filter(test=test).order_by('-id')
+
+    count_pages = ceil(len(results) / ELEMENT_IN_PAGE)
+    results = results[(page - 1) * ELEMENT_IN_PAGE:page * ELEMENT_IN_PAGE]
+
+    return render(request, 'main/results.html', {
+        'pages': range(1, count_pages + 1) if count_pages > 1 else False,
+        'test': test,
+        'results': results,
+    })
+
+
 class SignUpView(generic.CreateView):
-    form_class = UserCreationForm
+    form_class = SignUpForm
     success_url = reverse_lazy('login')
     template_name = 'registration/register.html'

@@ -12,7 +12,7 @@ class Test(models.Model):
 
 
 class Question(models.Model):
-    text = models.CharField(max_length=120)
+    text = models.TextField()
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -20,7 +20,7 @@ class Question(models.Model):
 
 
 class Answer(models.Model):
-    text = models.CharField(max_length=120)
+    text = models.TextField()
     is_correct = models.BooleanField(default=False)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
 
@@ -31,5 +31,6 @@ class Answer(models.Model):
 class Result(models.Model):
     count_questions = models.IntegerField()
     count_correct_questions = models.IntegerField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
+    attempt = models.IntegerField()
