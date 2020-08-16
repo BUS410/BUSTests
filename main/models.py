@@ -34,3 +34,6 @@ class Result(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
     attempt = models.IntegerField()
+
+    def __str__(self):
+        return f'{self.id}) {self.user} - {self.count_correct_questions}/{self.count_questions}'
