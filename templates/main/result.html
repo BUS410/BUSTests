@@ -5,7 +5,7 @@
 {% block content %}
     <h1>Результат теста <a href="{% url 'test' res.test_id %}">{{ res.test }}</a>
         {% if res.user %}
-            пользователя {{ res.user }}
+            пользователя {{ res.user.get_full_name }}
         {% endif %}
     </h1>
     <hr>
