@@ -2,10 +2,8 @@ from math import ceil
 
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, Http404
-from django.urls import reverse, reverse_lazy
-from django.views import generic
+from django.urls import reverse
 from . import models
-from .forms import SignUpForm
 
 
 # Create your views here.
@@ -123,9 +121,3 @@ def results_by_test(request, pk, page=1):
         'test': test,
         'results': results,
     })
-
-
-class SignUpView(generic.CreateView):
-    form_class = SignUpForm
-    success_url = reverse_lazy('login')
-    template_name = 'registration/register.html'
