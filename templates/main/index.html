@@ -20,7 +20,7 @@
         <div class="text-center">
            {% for page in pages %}
 
-               <a class="btn btn-link btn-outline-primary" style="margin-top: 10px;" href="{% url 'test_list_page' page %}">
+               <a class="btn btn-link btn-outline-primary" style="margin-top: 10px;" href="{% if query %}{% url 'test_list_page_for_query' page query %}{% else %}{% url 'test_list_page' page %}{% endif %}">
                    {{ page }}
                </a>
 

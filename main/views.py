@@ -9,33 +9,24 @@ from . import models
 # Create your views here.
 
 
-ELEMENT_IN_PAGE = 20
+ELEMENT_IN_PAGE = 10
 
 
-def index(request, page=1):
+def index(request, page=1, q=''):
     if request.method == 'POST':
         tests = models.Test.objects.filter(title__icontains=request.POST['query']).order_by('-id')
-        return render(request, 'main/index.html', {'tests': tests})
+        q = request.POST['query']
+    elif q:
+        tests = models.Test.objects.filter(title__icontains=q).order_by('-id')
     else:
         tests = models.Test.objects.order_by('-id')
 
-        count_pages = ceil(len(tests) / ELEMENT_IN_PAGE)
-        tests = tests[(page - 1) * ELEMENT_IN_PAGE:page * ELEMENT_IN_PAGE]
+    count_pages = ceil(len(tests) / ELEMENT_IN_PAGE)
+    tests = tests[(page - 1) * ELEMENT_IN_PAGE:page * ELEMENT_IN_PAGE]
 
-        return render(request, 'main/index.html',
-                      {'tests': tests, 'pages': range(1, count_pages + 1) if count_pages > 1 else False})
-
-
-def profile(request, page=1):
-    if request.user.is_authenticated:
-        results = models.Result.objects.filter(user=request.user).order_by('-id')
-        count_pages = ceil(len(results) / ELEMENT_IN_PAGE)
-        results = results[(page - 1) * ELEMENT_IN_PAGE:page * ELEMENT_IN_PAGE]
-        return render(request, 'registration/profile.html',
-                      {'user': request.user,
-                       'results': results,
-                       'pages': range(1, count_pages + 1) if count_pages > 1 else False})
-    return HttpResponseRedirect(reverse('login'))
+    return render(request, 'main/index.html',
+                  {'tests': tests, 'pages': range(1, count_pages + 1) if count_pages > 1 else False,
+                   'query': q})
 
 
 def result(request, pk: int):
