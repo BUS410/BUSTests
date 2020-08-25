@@ -9,7 +9,7 @@ from . import models
 # Create your views here.
 
 
-ELEMENT_IN_PAGE = 10
+ELEMENT_IN_PAGE = 20
 
 
 def index(request, page=1, q=''):
