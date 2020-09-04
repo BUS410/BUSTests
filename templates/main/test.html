@@ -4,8 +4,10 @@
 
 {% block content %}
     <h1 style="padding-top: 5px;">{{ test }}</h1>
-    <div class="alert alert-success">Этот тест прошли {{ count_passed }} раз(-a). Нажмите
-    <a href="{% url 'results' test.id %}">здесь</a> чтобы посмотреть все результаты по этому тесту.</div>
+    {% if request.user.is_staff %}
+        <div class="alert alert-success">Этот тест прошли {{ count_passed }} раз(-a). Нажмите
+        <a href="{% url 'results' test.id %}">здесь</a> чтобы посмотреть все результаты по этому тесту.</div>
+    {% endif %}
     {% if not request.user.is_authenticated %}
         <div class="alert alert-warning" role="alert">
             Примечание: <br>
@@ -14,6 +16,10 @@
             <a href="{% url 'login' %}">этой</a> ссылке.
         </div>
     {% endif %}
+    <div class="alert alert-warning" role="alert">
+        Примечание: <br>
+        Верных ответов может быть несколько или один, а может вооще и не быть.
+    </div>
     <hr>
     <form action="{% url 'test' test.id %}" method="post">
     {% csrf_token %}

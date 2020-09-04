@@ -6,9 +6,6 @@ from django.urls import reverse
 from . import models
 
 
-# Create your views here.
-
-
 ELEMENT_IN_PAGE = 20
 
 
@@ -32,6 +29,10 @@ def index(request, page=1, q=''):
 def result(request, pk: int):
     try:
         res = models.Result.objects.get(id=pk)
+        
+        if (request.user != res.user) and (not request.user.is_staff):
+            return HttpResponseRedirect(reverse('no_access'))
+        
         percent = round(res.count_correct_questions / res.count_questions * 100, 2)
         print(res.count_correct_questions, res.count_questions)
         return render(request, 'main/result.html', {'res': res, 'percent': percent})
@@ -97,6 +98,8 @@ def new_test(request):
 
 
 def results_by_test(request, pk, page=1):
+    if not request.user.is_staff:
+        return HttpResponseRedirect(reverse('no_access'))
     try:
         test = models.Test.objects.get(id=pk)
     except Exception as e:
@@ -112,3 +115,7 @@ def results_by_test(request, pk, page=1):
         'test': test,
         'results': results,
     })
+
+
+def no_access(request):
+    return render(request, 'main/no_access.html')

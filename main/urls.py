@@ -10,4 +10,5 @@ urlpatterns = [
     path('result/<int:pk>', views.result, name='result'),
     path('test/<int:pk>', views.test_passing, name='test'),
     path('new_test', views.new_test, name='new_test'),
+    path('no_access', views.no_access, name='no_access'),
 ]
