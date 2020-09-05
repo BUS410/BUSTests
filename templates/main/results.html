@@ -14,7 +14,9 @@
                 <h4>Результат: <a href="{% url 'result' res.id %}">
                     {{ res.count_correct_questions }}/{{ res.count_questions }}
                 </a></h4>
-                <h4>Попытка: {{ res.attempt }}</h4>
+                {% if res.user %}
+                    <h4>Попытка: {{ res.attempt }}</h4>
+                {% endif %}
             </li>
         {% endfor %}
     </ul>
