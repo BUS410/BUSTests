@@ -18,7 +18,11 @@
     {% endif %}
     <div class="alert alert-warning" role="alert">
         Примечание: <br>
-        Верных ответов может быть несколько или один, а может вооще и не быть.
+        {% if test.note %}
+            {{ test.note }}
+        {% else %}
+            Верных ответов может быть несколько или один, а может вооще и не быть.
+        {% endif %}
     </div>
     <hr>
     <form action="{% url 'test' test.id %}" method="post">

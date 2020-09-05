@@ -79,9 +79,12 @@ def new_test(request):
     if request.method == "POST":
         try:
             title = request.POST['title']
-            count_questions = sum(1 for key in request.POST if key.endswith('0'))
             test = models.Test(title=title)
+            if 'note' in request.POST:
+                test.note = request.POST['note']
             test.save()
+
+            count_questions = sum(1 for key in request.POST if key.endswith('0'))
             for i in range(1, count_questions + 1):
                 question = models.Question(test=test, text=request.POST[f'{i}-0'])
                 question.save()
