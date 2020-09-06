@@ -17,7 +17,8 @@ class Test(models.Model):
 
 class Question(models.Model):
     text = models.TextField(verbose_name='Текст вопроса')
-    test = models.ForeignKey(Test, on_delete=models.CASCADE, verbose_name='Тест')
+    test = models.ForeignKey(Test, on_delete=models.CASCADE,
+                             verbose_name='Тест')
 
     def __str__(self):
         return self.text
