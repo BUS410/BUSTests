@@ -34,8 +34,9 @@
             <h4>{{ q }}</h4>
             <ol>
             {% for a in ans %}
-                <li>{{ a }} <label>
+                <li> <label>
                     <input type="checkbox" name="{{ q.id }}-{{ a.id }}">
+                    {{ a }}
                 </label></li>
             {% endfor %}
             </ol>
