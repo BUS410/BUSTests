@@ -29,10 +29,10 @@ def index(request, page=1, q=''):
 def result(request, pk: int):
     try:
         res = models.Result.objects.get(id=pk)
-        
-        if (request.user != res.user) and (not request.user.is_staff):
+
+        if res.user and (request.user != res.user) and (not request.user.is_staff):
             return HttpResponseRedirect(reverse('no_access'))
-        
+
         percent = round(res.count_correct_questions / res.count_questions * 100, 2)
         print(res.count_correct_questions, res.count_questions)
         return render(request, 'main/result.html', {'res': res, 'percent': percent})
